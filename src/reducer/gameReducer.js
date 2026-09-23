@@ -1,3 +1,4 @@
+import buildNewGameState from "@/utilis/buildNewGameState";
 import { ACTIONS } from "./actions";
 
 export const initialState = {
@@ -7,9 +8,9 @@ export const initialState = {
     playerCount: 1,
     gridSize: 4, // 4 or 6
   },
-  cards: [], 
-  flippedCardIds: [], 
-  players: [], 
+  cards: [],
+  flippedCardIds: [],
+  players: [],
   activePlayerIndex: 0,
   moves: 0,
   time: 0,
@@ -63,8 +64,11 @@ export function gameReducer(state, action) {
           )
         : state.players;
 
+      const isGameOver = updatedCards.every((c) => c.isMatched);
+
       return {
         ...state,
+        status: isGameOver ? "gameOver" : state.status,
         cards: updatedCards,
         flippedCardIds: [],
         players: updatedPlayers,
@@ -76,17 +80,27 @@ export function gameReducer(state, action) {
     }
 
     case ACTIONS.START_GAME: {
-      const { theme, playerCount, gridSize } = action.payload;
+      return buildNewGameState(action.payload);
+    }
 
+    case ACTIONS.RESTART: {
+      return buildNewGameState(state.settings);
+    }
+
+    case ACTIONS.TICK: {
+      if (state.status !== "playing") {
+        return state;
+      }
+      return {
+        ...state,
+        time: state.time + 1,
+      };
+    }
+
+    case ACTIONS.RETURN_TO_SETUP: {
       return {
         ...initialState,
-        status: "playing",
-        settings: { theme, playerCount, gridSize },
-        cards: createShuffledDeck(theme, gridSize),
-        players: Array.from({ length: playerCount }, (_, index) => ({
-          id: index,
-          score: 0,
-        })),
+        settings: state.settings,
       };
     }
 
