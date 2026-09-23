@@ -1,0 +1,16 @@
+@theme {
+  --color-white: hsl(0, 100%, 100%);
+  --color-black: hsl(0, 0%, 0%);
+  --color-grey-100: hsl(0, 0%, 95%);
+  --color-grey-50: hsl(0, 0%, 99%);
+  --color-blue-950: hsl(206, 45%, 15%);
+  --color-blue-800: hsl(205, 30%, 27%);
+  --color-blue-400: hsl(203, 22%, 55%);
+  --color-blue-350: hsl(205, 37%, 55%);
+  --color-blue-300: hsl(203, 28%, 79%);
+  --color-blue-100: hsl(203, 25%, 90%);
+  --color-orange-400: hsl(37, 98%, 54%);
+  --color-orange-300: hsl(36, 100%, 65%);
+
+  --font-body: 'Atkinson Hyperlegible', sans-serif;
+}
