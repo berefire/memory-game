@@ -13,7 +13,7 @@ function Attribution() {
       Challenge by{' '}
       <a
         href="https://www.frontendmentor.io?ref=challenge"
-        className="text-blue-800 hover:underline focus-ring"
+        className="text-blue-950 hover:underline focus-visible:focus-ring"
       >
         Frontend Mentor <span
           aria-hidden="true" className="external-icon">🔗</span>
@@ -21,7 +21,7 @@ function Attribution() {
       . Coded by{' '}
       <a
         href="https://github.com/berefire"
-        className="text-blue-800 hover:underline focus-ring"
+        className="text-blue-950 hover:underline focus-visible:focus-ring"
       >
         Berefire
       </a>
