@@ -1,4 +1,5 @@
 export const ACTIONS = {
   FLIP_CARD: 'FLIP_CARD',
   CHECK_MATCH: 'CHECK_MATCH',
+  START_GAME: 'START_GAME'
 };
