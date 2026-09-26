@@ -1,7 +1,22 @@
 import { shuffle } from '@/utils/shuffle';
 import { FaRegSnowflake } from "react-icons/fa6";
 import { IoFlaskSharp, IoFootball } from "react-icons/io5";
-import { FaLiraSign, FaCar, FaHandSpock, FaSun, FaAnchor, FaRegMoon } from "react-icons/fa";
+import {
+  FaLiraSign,
+  FaCar,
+  FaHandSpock,
+  FaSun,
+  FaAnchor,
+  FaRegMoon,
+  FaRocket,
+  FaGem,
+  FaUmbrella,
+  FaKey,
+  FaCompass,
+  FaCamera,
+  FaFeatherAlt,
+  FaTree,
+} from "react-icons/fa";
 import { AiFillBug } from "react-icons/ai";
 
 const NUMBER_VALUES = Array.from({ length: 18 }, (_, i) => i + 1); 
@@ -17,11 +32,15 @@ export const ICON_MAP = {
   "icon-lira": FaLiraSign,
   "icon-hand-spock": FaHandSpock,
   "icon-sun": FaSun,
+  "icon-rocket": FaRocket,
+  "icon-gem": FaGem,
+  "icon-umbrella": FaUmbrella,
+  "icon-key": FaKey,
+  "icon-compass": FaCompass,
+  "icon-camera": FaCamera,
+  "icon-feather": FaFeatherAlt,
+  "icon-tree": FaTree,
 };
-
-console.log(
-  Object.entries(ICON_MAP).map(([key, value]) => [key, typeof value])
-);
 
 export function createShuffledDeck(theme, gridSize) {
   const pairCount = (gridSize * gridSize) / 2;
