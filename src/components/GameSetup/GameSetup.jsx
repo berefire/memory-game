@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ToggleGroup from "@/components/ToggleGroup/ToggleGroup";
 import { ACTIONS } from "@/reducer/actions";
+import Button from "@/components/Button/Button";
 
 function GameSetup({ dispatch }) {
     const [theme, setTheme] = useState("numbers");
@@ -52,7 +53,9 @@ function GameSetup({ dispatch }) {
                 onChange={setGridSize}
              />
              </div>
-             <button type="button" onClick={handleStart} className="bg-orange-400 hover:bg-orange-300 cursor-pointer focus-ring focus-ring-orange-400 py-3 rounded-[1.625rem] text-grey-50 font-bold text-lg md:text-[2rem] leading-tight">Start Game</button>
+             <Button onClick={handleStart} fullWidth>
+                Start Game
+             </Button>
             </div>
         </div>
     );
