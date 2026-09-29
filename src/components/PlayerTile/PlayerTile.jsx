@@ -13,10 +13,25 @@ function PlayerTile({ player, isActive }) {
         }`}
       >
         <span className="font-body text-[0.9375rem] md:text-lg font-bold leading-tight">
-          <span className="md:hidden text-blue-400">P{player.id + 1}</span>
-          <span className="hidden md:inline text-blue-400">Player {player.id + 1}</span>
+          <span
+            className={`md:hidden ${
+              isActive ? " text-grey-50" : " text-blue-400"
+            }`}
+          >
+            P{player.id + 1}
+          </span>
+          <span
+            className={`hidden md:inline ${
+              isActive ? " text-grey-50" : " text-blue-400"
+            }`}
+          >
+            Player {player.id + 1}
+          </span>
         </span>
-        <output aria-live="polite" className="font-body text-[1.5rem] md:text-[2rem] font-bold leading-tight">
+        <output
+          aria-live="polite"
+          className="font-body text-[1.5rem] md:text-[2rem] font-bold leading-tight"
+        >
           {player.score}
         </output>
       </div>
