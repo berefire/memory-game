@@ -1,8 +1,9 @@
 import { ACTIONS } from "@/reducer/actions";
 import { ICON_MAP } from "@/constants/data/cardData";
 
-function Card({ card, dispatch, theme }) {
+function Card({ card, dispatch, theme, lastMatchedIds = [] }) {
   const isRevealed = card.isFlipped || card.isMatched;
+  const isJustMatched = lastMatchedIds.includes(card.id);
 
   const handleClick = () => {
     dispatch({
@@ -30,7 +31,7 @@ function Card({ card, dispatch, theme }) {
           <div className="absolute inset-0 rounded-full bg-blue-800 hover:bg-blue-950 backface-hidden" />
 
           <div
-            className={`absolute inset-0 flex items-center justify-center rounded-full bg-blue-300 hover:bg-blue-400 leading-tight font-bold text-grey-50 backface-hidden rotate-y-180 ${card.isMatched ? "bg-orange-400 hover:bg-orange-300" : ""}`}
+            className={`absolute inset-0 flex items-center justify-center rounded-full bg-blue-300 hover:bg-blue-400 leading-tight font-bold text-grey-50 backface-hidden rotate-y-180 ${isJustMatched ? "bg-orange-400 hover:bg-orange-300" : ""}`}
           >
             {IconComponent ? (
               <IconComponent

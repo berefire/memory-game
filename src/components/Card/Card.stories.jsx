@@ -33,6 +33,7 @@ export const Hidden = {
     card: { id: 1, value: 7, isFlipped: false, isMatched: false },
     theme: "numbers",
     dispatch: fn(),
+    lastMatchedIds: [],
   },
 };
 
@@ -42,6 +43,7 @@ export const FlippedNumber = {
     card: { id: 2, value: 7, isFlipped: true, isMatched: false },
     theme: "numbers",
     dispatch: fn(),
+    lastMatchedIds: [],
   },
 };
 
@@ -51,14 +53,26 @@ export const FlippedIcon = {
     card: { id: 3, value: "icon-sun", isFlipped: true, isMatched: false },
     theme: "icons",
     dispatch: fn(),
+    lastMatchedIds: [],
   },
 };
 
-export const Matched = {
+export const JustMatched = {
   render: (args) => <CardWithState {...args} />,
   args: {
     card: { id: 4, value: "icon-hand-spock", isFlipped: true, isMatched: true },
     theme: "icons",
     dispatch: fn(),
+    lastMatchedIds: [4],
+  },
+};
+
+export const PreviouslyMatched = {
+  render: (args) => <CardWithState {...args} />,
+  args: {
+    card: { id: 5, value: "icon-hand-spock", isFlipped: true, isMatched: true },
+    theme: "icons",
+    dispatch: fn(),
+    lastMatchedIds: [],
   },
 };
