@@ -1,11 +1,6 @@
 import StatTile from "@/components/StatTile/StatTile";
 import PlayerTile from "@/components/PlayerTile/PlayerTile";
-
-function formatTime(totalSeconds) {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
+import { formatTime } from "@/utils/formatTime";
 
 function StatsBar({ time, moves, players, activePlayerIndex }) {
   const isMultiplayer = players.length > 1;
@@ -16,6 +11,11 @@ function StatsBar({ time, moves, players, activePlayerIndex }) {
       role="group"
       aria-label={isMultiplayer ? "Player scores" : "Game stats"}
     >
+      {isMultiplayer && (
+        <p className="sr-only" aria-live="polite">
+          Player {activePlayerIndex + 1}'s turn
+        </p>
+      )}
       {isMultiplayer ? (
         players.map((player, index) => (
           <PlayerTile
