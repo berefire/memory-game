@@ -2,7 +2,7 @@ import Header from "@/components/Header/Header";
 import GameBoard from "@/components/GameBoard/GameBoard";
 import StatsBar from "@/components/StatsBar/StatsBar";
 import ResultsModal from "@/components/ResultsModal/ResultsModal";
-import Attribution from "../components/Attribution/Attribution";
+import Attribution from "@/components/Attribution/Attribution";
 
 function GamePage({ state, dispatch }) {
   return (
