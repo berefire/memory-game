@@ -1,13 +1,30 @@
-import { useReducer, useEffect } from 'react';
-import { gameReducer, initialState } from '@/reducer/gameReducer';
-import { ACTIONS } from '@/reducer/actions';
+import { useReducer, useEffect } from "react";
+import { gameReducer, initialState } from "@/reducer/gameReducer";
+import { ACTIONS } from "@/reducer/actions";
+import SetupPage from "@/pages/SetupPage";
+import GamePage from "@/pages/GamePage";
+
+const STORAGE_KEY = "memory-game-state";
+
+function loadState(initialArg) {
+  try {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : initialArg;
+  } catch {
+    return initialArg;
+  }
+}
 
 
 function App() {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
+  const [state, dispatch] = useReducer(gameReducer, initialState, loadState);
+
+   useEffect(() => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
 
   useEffect(() => {
-    if(state.flippedCardIds.length === 2) {
+    if (state.flippedCardIds.length === 2) {
       const timer = setTimeout(() => {
         dispatch({ type: ACTIONS.CHECK_MATCH });
       }, 1000);
@@ -26,11 +43,11 @@ function App() {
     return () => clearInterval(interval);
   }, [state.status]);
 
-  return (
-    <>
+  if (state.status === "setup") {
+    return <SetupPage dispatch={dispatch} />;
+  }
 
-    </>
-  )
+  return <GamePage state={state} dispatch={dispatch} />;
 }
 
-export default App
+export default App;
