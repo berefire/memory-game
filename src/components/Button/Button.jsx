@@ -1,6 +1,7 @@
 function Button({
     variant = 'primary',
     size = 'default',
+    type = 'button',
     fullWidth = false,
     className = '',
     children,
@@ -22,7 +23,7 @@ function Button({
 
     return (
         <button
-            type="button"
+            type={type}
             className={`${base} ${variants[variant]} ${sizes[size]} ${fullWidth ? 'w-full' : ''} ${className}`}
             {...props}
         >
