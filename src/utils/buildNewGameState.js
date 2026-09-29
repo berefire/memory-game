@@ -1,5 +1,5 @@
 import { initialState } from '@/reducer/gameReducer';
-import { createShuffledDeck } from '@/utilis/createShuffledDeck';
+import { createShuffledDeck } from '@/utils/createShuffledDeck';
 
 function buildNewGameState(settings) {
   const { theme, gridSize, playerCount } = settings;
