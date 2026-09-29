@@ -1,5 +1,5 @@
 import { shuffle } from '@/utils/shuffle';
-import { ICON_MAP, NUMBER_VALUES } from '@/constants/data/cardData';
+import { ICON_MAP, NUMBER_VALUES } from '@/data/cardData';
 
 export function createShuffledDeck(theme, gridSize) {
   const pairCount = (gridSize * gridSize) / 2;
