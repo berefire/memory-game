@@ -14,7 +14,7 @@
 ![Responsive Layout](https://img.shields.io/badge/Responsive%20Layout-Full%20Support-blue?style=for-the-badge)
 ![Mobile First](https://img.shields.io/badge/Mobile--First-Design-orange?style=for-the-badge)
 
-This is a solution to the [Memory game challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/memory-game-vse4WFPvM). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
+This is a solution to the [Memory game challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/memory-game-vse4WFPvM). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
 ## Table of contents
 
@@ -68,7 +68,7 @@ Users should be able to:
 
 ### 🔗Links
 
-- Solution URL: TODO - add your Frontend Mentor solution URL once submitted
+- Solution URL: [https://www.frontendmentor.io/solutions/memory-game-with-solo-multiplayer-and-accessible-dialogs-bF-Sb4h8os](https://www.frontendmentor.io/solutions/memory-game-with-solo-multiplayer-and-accessible-dialogs-bF-Sb4h8os)
 - Live Site URL: [https://berefire.github.io/memory-game/](https://berefire.github.io/memory-game/)
 
 ---
