@@ -34,7 +34,7 @@ function GameMenu({ dispatch, onClose, isOpen }) {
       ref={dialogRef}
       onClose={onClose}
       onClick={handleBackdropClick}
-      className="hidden open:flex flex-col m-auto rounded-[0.625rem] p-6 w-full max-w-[calc(100%-3rem)] backdrop:bg-black/50"
+      className="hidden open:flex flex-col m-auto rounded-[0.625rem] p-6 w-full max-w-[calc(100%-3rem)] backdrop:bg-black/50 bg-grey-50"
       aria-labelledby="game-menu-title"
     >
       <div
