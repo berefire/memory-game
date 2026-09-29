@@ -15,12 +15,17 @@ function loadState(initialArg) {
   }
 }
 
-
 function App() {
   const [state, dispatch] = useReducer(gameReducer, initialState, loadState);
 
-   useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.warn("Couldn't save game state to sessionStorage:", error);
+      }
+    }
   }, [state]);
 
   useEffect(() => {
