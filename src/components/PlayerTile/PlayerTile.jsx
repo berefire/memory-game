@@ -1,6 +1,6 @@
 function PlayerTile({ player, isActive }) {
   return (
-    <div className="relative flex-1">
+    <div className="relative flex-1 min-w-0">
       {isActive && (
         <div
           className="absolute -top-2 left-1/2 h-0 w-0 -translate-x-1/2 border-x-8 border-b-8 border-x-transparent border-b-orange-400"
