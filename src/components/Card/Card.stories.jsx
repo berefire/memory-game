@@ -7,7 +7,7 @@ export default {
   component: Card,
   decorators: [
     (Story) => (
-      <div style={{ width: "100px" }}>
+      <div className="w-25">
         <Story />
       </div>
     ),
