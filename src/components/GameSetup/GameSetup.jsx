@@ -8,7 +8,8 @@ function GameSetup({ dispatch }) {
     const [playerCount, setPlayerCount] = useState(1);
     const [gridSize, setGridSize] = useState(4);
 
-    const handleStart = () => {
+    const handleStart = (e) => {
+        e.preventDefault();
         dispatch({
             type: ACTIONS.START_GAME,
             payload: { theme, playerCount, gridSize },
@@ -16,9 +17,12 @@ function GameSetup({ dispatch }) {
     };
 
     return (
-        <div>
-            <h1 className="sr-only">Game Setup</h1>
-            <div className="bg-grey-50 p-6 md:py-14.25 md:px-13.75 flex flex-col gap-10 rounded-[0.625rem]">
+        <main className="flex-1 flex flex-col gap-12 md:gap-20 justify-center items-center">
+        <h1 className="font-body text-center text-[2rem] md:text-[2.5rem] font-bold text-grey-50 leading-tight">
+          memory
+        </h1>
+            <h2 className="sr-only" id="setup-heading">Game Setup</h2>
+            <form onSubmit={handleStart} aria-labelledby="setup-heading" className="bg-grey-50 p-6 md:py-14.25 md:px-13.75 flex flex-col gap-10 rounded-[0.625rem] w-full max-w-[calc(100%-3rem)] md:max-w-[calc(100%-7.125rem)] lg:max-w-[calc(100%-25.65rem)] xl:max-w-[calc(100%-49.125rem)]">
             <div className="flex flex-col gap-6">
             <ToggleGroup
                 name="theme"
@@ -53,11 +57,11 @@ function GameSetup({ dispatch }) {
                 onChange={setGridSize}
              />
              </div>
-             <Button onClick={handleStart} fullWidth>
+             <Button type="submit" fullWidth>
                 Start Game
              </Button>
-            </div>
-        </div>
+            </form>
+        </main>
     );
 }
 
