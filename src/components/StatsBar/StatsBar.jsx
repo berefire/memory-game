@@ -27,7 +27,7 @@ function StatsBar({ time, moves, players, activePlayerIndex }) {
       ) : (
         <>
           <StatTile label="Time" value={formatTime(time)} />
-          <StatTile label="Moves" value={moves} />
+          <StatTile label="Moves" value={moves} announceChanges />
         </>
       )}
     </div>
