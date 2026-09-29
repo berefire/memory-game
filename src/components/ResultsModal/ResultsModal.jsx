@@ -1,12 +1,7 @@
 import { useEffect, useRef } from "react";
 import { ACTIONS } from "@/reducer/actions";
 import Button from "@/components/Button/Button";
-
-function formatTime(totalSeconds) {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
+import { formatTime } from "@/utils/formatTime";
 
 function ResultsModal({ isOpen, players, time, moves, dispatch }) {
   const dialogRef = useRef(null);
