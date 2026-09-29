@@ -1,4 +1,4 @@
-import buildNewGameState from "@/utilis/buildNewGameState";
+import buildNewGameState from "@/utils/buildNewGameState";
 import { ACTIONS } from "./actions";
 
 export const initialState = {
@@ -10,6 +10,7 @@ export const initialState = {
   },
   cards: [],
   flippedCardIds: [],
+  lastMatchedIds: [],
   players: [],
   activePlayerIndex: 0,
   moves: 0,
@@ -30,6 +31,8 @@ export function gameReducer(state, action) {
         return state;
       }
 
+      const isStartingNewAttempt = state.flippedCardIds.length === 0;
+
       const updatedCards = state.cards.map((c) =>
         c.id === cardId ? { ...c, isFlipped: true } : c,
       );
@@ -38,6 +41,7 @@ export function gameReducer(state, action) {
         ...state,
         cards: updatedCards,
         flippedCardIds: [...state.flippedCardIds, cardId],
+        lastMatchedIds: isStartingNewAttempt ? [] : state.lastMatchedIds,
       };
     }
 
@@ -71,6 +75,7 @@ export function gameReducer(state, action) {
         status: isGameOver ? "gameOver" : state.status,
         cards: updatedCards,
         flippedCardIds: [],
+        lastMatchedIds: isMatch ? [firstId, secondId] : state.lastMatchedIds,
         players: updatedPlayers,
         moves: state.moves + 1,
         activePlayerIndex: isMatch
