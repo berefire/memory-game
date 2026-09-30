@@ -1,5 +1,6 @@
 import { useReducer, useEffect } from "react";
-import { gameReducer, initialState } from "@/reducer/gameReducer";
+import { gameReducer } from "@/reducer/gameReducer";
+import { initialState } from "@/reducer/initialState";
 import { ACTIONS } from "@/reducer/actions";
 import SetupPage from "@/pages/SetupPage";
 import GamePage from "@/pages/GamePage";
