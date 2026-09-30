@@ -1,4 +1,4 @@
-import { initialState } from '@/reducer/gameReducer';
+import { initialState } from '@/reducer/initialState';
 import { createShuffledDeck } from '@/utils/createShuffledDeck';
 
 function buildNewGameState(settings) {
