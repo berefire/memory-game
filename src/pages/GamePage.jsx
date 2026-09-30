@@ -11,6 +11,7 @@ function GamePage({ state, dispatch }) {
       <main className="flex-1 flex flex-col items-center">
         <div className="inline-flex flex-col items-center gap-31.5">
           <GameBoard
+            key={state.settings.gridSize}
             cards={state.cards}
             gridSize={state.settings.gridSize}
             theme={state.settings.theme}
@@ -32,7 +33,7 @@ function GamePage({ state, dispatch }) {
           dispatch={dispatch}
         />
       </main>
-      <Attribution colorText="text-blue-400" colorLink="text-blue-800" />
+      <Attribution colorText="text-blue-950" colorLink="text-blue-800" />
     </div>
   );
 }
