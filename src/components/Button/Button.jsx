@@ -12,9 +12,9 @@ function Button({
 
   const variants = {
     primary:
-      "bg-orange-400 hover:bg-orange-300 focus-visible:focus-ring focus-visible:focus-ring-orange-400 text-grey-50",
+      "bg-orange-400 hover:bg-orange-300 focus-visible:focus-ring focus-visible:focus-ring-blue-800 text-grey-50",
     secondary:
-      "bg-blue-100 hover:bg-blue-200 focus-visible:focus-ring focus-visible:focus-ring-blue-800 text-blue-800",
+      "bg-blue-100 hover:bg-blue-300 focus-visible:focus-ring focus-visible:focus-ring-blue-800 text-blue-800",
   };
 
   const sizes = {
