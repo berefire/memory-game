@@ -1,4 +1,4 @@
-function Attribution({colorText="text-grey-50", colorLink="text-blue-400"}) {
+function Attribution({colorText="text-grey-50", colorLink="text-blue-100"}) {
   return (
     <footer className={`${colorText} font-body text-center text-xs`}>
       Challenge by{' '}
