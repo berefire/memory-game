@@ -1,5 +1,4 @@
-import { fireEvent } from "@testing-library/dom";
-import { expect, fn, waitFor } from "storybook/test";
+import { expect, fn, waitFor, fireEvent } from "storybook/test";
 import GameMenu from "./GameMenu";
 
 export default {
