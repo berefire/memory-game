@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@/utils/shuffle", () => ({
   shuffle: vi.fn((deck) => deck),
@@ -9,6 +9,10 @@ import { createShuffledDeck } from "./createShuffledDeck";
 import { ICON_MAP, NUMBER_VALUES } from "@/data/cardData";
 
 describe("createShuffledDeck", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("creates gridSize squared cards", () => {
     const deck = createShuffledDeck("numbers", 4);
     expect(deck).toHaveLength(16);
@@ -45,6 +49,8 @@ describe("createShuffledDeck", () => {
 
   it("passes the unshuffled deck to shuffle before assigning ids", () => {
     createShuffledDeck("numbers", 4);
+
+    expect(shuffle).toHaveBeenCalledOnce();
     const passedDeck = shuffle.mock.calls[0][0];
     expect(passedDeck).toHaveLength(16);
     expect(passedDeck[0]).toEqual({ value: 1 });
