@@ -6,6 +6,44 @@ import { formatTime } from "@/utils/formatTime";
 import ResultsModal from "./ResultsModal";
 
 describe("ResultsModal", () => {
+  it("does not open the dialog when isOpen is false", () => {
+    const showModalSpy = vi
+      .spyOn(HTMLDialogElement.prototype, "showModal")
+      .mockImplementation(() => {});
+
+    render(
+      <ResultsModal
+        isOpen={false}
+        players={[{ id: 0, score: 8 }]}
+        time={65}
+        moves={12}
+        dispatch={vi.fn()}
+      />,
+    );
+
+    expect(showModalSpy).not.toHaveBeenCalled();
+    showModalSpy.mockRestore();
+  });
+
+  it("opens the dialog when isOpen is true", () => {
+    const showModalSpy = vi
+      .spyOn(HTMLDialogElement.prototype, "showModal")
+      .mockImplementation(() => {});
+
+    render(
+      <ResultsModal
+        isOpen
+        players={[{ id: 0, score: 8 }]}
+        time={65}
+        moves={12}
+        dispatch={vi.fn()}
+      />,
+    );
+
+    expect(showModalSpy).toHaveBeenCalledOnce();
+    showModalSpy.mockRestore();
+  });
+
   it("shows solo results with time and moves", () => {
     render(
       <ResultsModal isOpen players={[{ id: 0, score: 8 }]} time={65} moves={12} dispatch={vi.fn()} />
