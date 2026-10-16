@@ -32,10 +32,19 @@ export const NewGame = {
   play: async ({ args, canvas, userEvent }) => {
     const button = canvas.getByRole('button', { name: /new game/i })
 
-    expect(button).toBeInTheDocument()
-
     await userEvent.click(button)
-
     expect(args.onClick).toHaveBeenCalledOnce()
-  }
+  },
+}
+
+export const Disabled = {
+  args: {
+    variant: 'primary',
+    children: 'Start Game',
+    disabled: true,
+  },
+  play: async ({ canvas }) => {
+    const button = canvas.getByRole('button', { name: /start game/i })
+    expect(button).toBeDisabled()
+  },
 }

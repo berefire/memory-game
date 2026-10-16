@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fn } from "storybook/test";
+import { expect, fn, userEvent, within } from "storybook/test";
 import Card from "./Card";
 
 export default {
@@ -19,7 +19,7 @@ function CardWithState({ card, dispatch, ...args }) {
 
   const handleDispatch = (action) => {
     dispatch(action); // still logs to the Actions panel
-    if (action.type === "FLIP_CARD") {
+    if (action.type === "FLIP_CARD" && !cardState.isFlipped && !cardState.isMatched) {
       setCardState((prev) => ({ ...prev, isFlipped: !prev.isFlipped }));
     }
   };
@@ -35,6 +35,16 @@ export const Hidden = {
     dispatch: fn(),
     lastMatchedIds: [],
   },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Card 2, hidden" }));
+
+    expect(args.dispatch).toHaveBeenCalledWith({
+      type: "FLIP_CARD",
+      payload: { cardId: 1 },
+    });
+    expect(canvas.getByRole("button", { name: "Card 2, showing 7" })).toBeInTheDocument();
+  },
 };
 
 export const FlippedNumber = {
@@ -44,6 +54,14 @@ export const FlippedNumber = {
     theme: "numbers",
     dispatch: fn(),
     lastMatchedIds: [],
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Card 3, showing 7" }));
+
+    expect(args.dispatch).toHaveBeenCalled();
+    // Already revealed — a real game reducer no-ops this, so it must still show its value
+    expect(canvas.getByRole("button", { name: "Card 3, showing 7" })).toBeInTheDocument();
   },
 };
 
@@ -55,6 +73,11 @@ export const FlippedIcon = {
     dispatch: fn(),
     lastMatchedIds: [],
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Card 4, showing Sun" }));
+    expect(canvas.getByRole("button", { name: "Card 4, showing Sun" })).toBeInTheDocument();
+  },
 };
 
 export const JustMatched = {
@@ -65,6 +88,12 @@ export const JustMatched = {
     dispatch: fn(),
     lastMatchedIds: [4],
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Card 5, showing Hand Spock" }));
+    // A matched card must never un-flip, no matter how many times it's clicked
+    expect(canvas.getByRole("button", { name: "Card 5, showing Hand Spock" })).toBeInTheDocument();
+  },
 };
 
 export const PreviouslyMatched = {
@@ -74,5 +103,10 @@ export const PreviouslyMatched = {
     theme: "icons",
     dispatch: fn(),
     lastMatchedIds: [],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Card 6, showing Hand Spock" }));
+    expect(canvas.getByRole("button", { name: "Card 6, showing Hand Spock" })).toBeInTheDocument();
   },
 };

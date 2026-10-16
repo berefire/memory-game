@@ -1,47 +1,20 @@
-import { fn } from "storybook/test";
+import { expect, fn } from "storybook/test";
 import ResultsModal from "./ResultsModal";
 
-const meta = {
+export default {
+  title: "Components/ResultsModal",
   component: ResultsModal,
-  tags: ["autodocs"],
-  args: {
-    isOpen: true,
-    dispatch: fn(),
-  },
+  args: { dispatch: fn(), time: 65, moves: 12 },
 };
 
-export default meta;
+export const EscapeDoesNotCloseModal = {
+  args: { isOpen: true, players: [{ id: 0, score: 5 }] },
+  play: async ({ canvasElement, userEvent }) => {
+    const dialog = canvasElement.querySelector("dialog");
+    expect(dialog.open).toBe(true);
 
-export const Solo = {
-  args: {
-    players: [{ id: 0, score: 18 }],
-    time: 113,
-    moves: 39,
-  },
-};
+    await userEvent.keyboard("{Escape}");
 
-export const MultiplayerWinner = {
-  args: {
-    players: [
-      { id: 0, score: 4 },
-      { id: 1, score: 3 },
-      { id: 2, score: 8 },
-      { id: 3, score: 1 },
-    ],
-    time: 0,
-    moves: 0,
-  },
-};
-
-export const MultiplayerTie = {
-  args: {
-    players: [
-      { id: 0, score: 5 },
-      { id: 1, score: 5 },
-      { id: 2, score: 3 },
-      { id: 3, score: 2 },
-    ],
-    time: 0,
-    moves: 0,
+    expect(dialog.open).toBe(true);
   },
 };

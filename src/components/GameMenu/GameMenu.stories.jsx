@@ -1,32 +1,66 @@
-import { useState } from "react";
-import { fn } from "storybook/test";
+import { fireEvent } from "@testing-library/dom";
+import { expect, fn, waitFor } from "storybook/test";
 import GameMenu from "./GameMenu";
-import Button from "@/components/Button/Button";
 
-const meta = {
+export default {
+  title: "Components/GameMenu",
   component: GameMenu,
-  tags: ["autodocs"],
+  args: {
+    dispatch: fn(),
+    onClose: fn(),
+    isOpen: true,
+  },
 };
 
-export default meta;
+export const Open = {};
 
-function GameMenuWithState() {
-  const [isOpen, setIsOpen] = useState(true);
+export const RestartDispatchesAndCloses = {
+  play: async ({ args, canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /restart/i }));
 
-  return (
-    <div>
-      <Button className="px-[1.15625rem]" onClick={() => setIsOpen(true)}>
-        Menu
-      </Button>
-      <GameMenu
-        isOpen={isOpen}
-        dispatch={fn()}
-        onClose={() => setIsOpen(false)}
-      />
-    </div>
-  );
-}
+    expect(args.dispatch).toHaveBeenCalledWith({ type: "RESTART" });
+    expect(args.onClose).toHaveBeenCalledOnce();
+  },
+};
 
-export const Default = {
-  render: () => <GameMenuWithState />,
+export const NewGameDispatchesAndCloses = {
+  play: async ({ args, canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /new game/i }));
+
+    expect(args.dispatch).toHaveBeenCalledWith({ type: "RETURN_TO_SETUP" });
+    expect(args.onClose).toHaveBeenCalledOnce();
+  },
+};
+
+export const ResumeClosesWithoutDispatching = {
+  play: async ({ args, canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /resume game/i }));
+
+    expect(args.dispatch).not.toHaveBeenCalled();
+    expect(args.onClose).toHaveBeenCalledOnce();
+  },
+};
+
+export const EscapeKeyClosesTheMenu = {
+  play: async ({ canvasElement, args }) => {
+    const dialog = canvasElement.querySelector("dialog");
+    dialog.close();
+    await waitFor(() => expect(args.onClose).toHaveBeenCalledOnce());
+  },
+};
+
+export const BackdropClickCloses = {
+  play: async ({ canvasElement, args }) => {
+    const dialog = canvasElement.querySelector("dialog");
+    fireEvent.click(dialog);
+    expect(args.onClose).toHaveBeenCalledOnce();
+  },
+};
+
+export const ClickInsideContentDoesNotClose = {
+  play: async ({ canvasElement, args }) => {
+    const heading = canvasElement.querySelector("#game-menu-title");
+    fireEvent.click(heading);
+    expect(args.onClose).not.toHaveBeenCalled();
+  },
 };

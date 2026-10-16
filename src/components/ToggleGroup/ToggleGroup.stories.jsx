@@ -1,19 +1,9 @@
-import { useState } from "react";
+import { expect, fn } from "storybook/test";
 import ToggleGroup from "./ToggleGroup";
 
 export default {
   title: "Components/ToggleGroup",
   component: ToggleGroup,
-  tags: ["autodocs"],
-};
-
-function ToggleGroupWithState(args) {
-  const [value, setValue] = useState(args.value);
-  return <ToggleGroup {...args} value={value} onChange={setValue} />;
-}
-
-export const Theme = {
-  render: (args) => <ToggleGroupWithState {...args} />,
   args: {
     name: "theme",
     label: "Select Theme",
@@ -22,11 +12,26 @@ export const Theme = {
       { label: "Icons", value: "icons" },
     ],
     value: "numbers",
+    onChange: fn(),
   },
 };
 
-export const Players = {
-  render: (args) => <ToggleGroupWithState {...args} />,
+export const Default = {
+  play: async ({ canvas }) => {
+    expect(canvas.getByRole("group", { name: "Select Theme" })).toBeInTheDocument();
+    expect(canvas.getByRole("radio", { name: "Numbers" })).toBeChecked();
+    expect(canvas.getByRole("radio", { name: "Icons" })).not.toBeChecked();
+  },
+};
+
+export const ClickingAnOptionCallsOnChange = {
+  play: async ({ args, canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("radio", { name: "Icons" }));
+    expect(args.onChange).toHaveBeenCalledWith("icons");
+  },
+};
+
+export const NumericValues = {
   args: {
     name: "players",
     label: "Number of Players",
@@ -36,19 +41,12 @@ export const Players = {
       { label: "3", value: 3 },
       { label: "4", value: 4 },
     ],
-    value: 1,
+    value: 2,
   },
-};
+  play: async ({ args, canvas, userEvent }) => {
+    expect(canvas.getByRole("radio", { name: "2" })).toBeChecked();
 
-export const GridSize = {
-  render: (args) => <ToggleGroupWithState {...args} />,
-  args: {
-    name: "gridSize",
-    label: "Grid Size",
-    options: [
-      { label: "4x4", value: 4 },
-      { label: "6x6", value: 6 },
-    ],
-    value: 4,
+    await userEvent.click(canvas.getByRole("radio", { name: "4" }));
+    expect(args.onChange).toHaveBeenCalledWith(4);
   },
 };
