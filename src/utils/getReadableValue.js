@@ -3,5 +3,5 @@ export function getReadableValue(value, theme) {
   return value
     .replace(/^icon-/, "")
     .replace(/[-_]/g, " ")
-    .replace(/^\w/, (c) => c.toUpperCase());
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
