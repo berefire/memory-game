@@ -6,9 +6,9 @@ function GameBoard({ cards, gridSize, theme, dispatch, lastMatchedIds = [] }) {
   const buttonRefs = useRef([]);
 
   const gridColsClass =
-    gridSize === 6
-      ? "gap-2 md:gap-4 grid-cols-[repeat(6,minmax(0,3rem))] md:grid-cols-[repeat(6,5.125rem)]"
-      : "gap-3 md:gap-6 grid-cols-[repeat(4,minmax(0,4.5rem))] md:grid-cols-[repeat(4,7.375rem)]";
+  gridSize === 6
+    ? "gap-2 md:gap-4 grid-cols-[repeat(6,minmax(0,1fr))] md:grid-cols-[repeat(6,5.125rem)]"
+    : "gap-3 md:gap-6 grid-cols-[repeat(4,minmax(0,1fr))] md:grid-cols-[repeat(4,7.375rem)]";
 
   const moveFocus = (nextId) => {
     if (nextId < 0 || nextId >= cards.length) return;
