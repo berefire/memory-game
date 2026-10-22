@@ -33,7 +33,7 @@ describe("Header", () => {
 
     expect(screen.getByTestId("game-menu-mock")).toHaveAttribute("data-is-open", "false");
 
-    await userEvent.click(screen.getByRole("button", { name: "Menu" }));
+    await userEvent.click(screen.getByRole("button", { name: "Open game menu" }));
 
     expect(screen.getByTestId("game-menu-mock")).toHaveAttribute("data-is-open", "true");
   });
