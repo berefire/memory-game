@@ -42,11 +42,15 @@ function Header({ dispatch }) {
           onClick={() => setIsMenuOpen(true)}
           size="small"
           className="px-4.5 md:hidden"
+          aria-controls="game-menu"
+          aria-expanded={isMenuOpen}  
+          aria-haspopup="dialog"
+          aria-label="Open game menu"
         >
         Menu
       </Button>
 
-        <GameMenu isOpen={isMenuOpen} dispatch={dispatch} onClose={() => setIsMenuOpen(false)} />
+        <GameMenu id="game-menu" isOpen={isMenuOpen} dispatch={dispatch} onClose={() => setIsMenuOpen(false)} />
    
 
     </header>
