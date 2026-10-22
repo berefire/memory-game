@@ -1,5 +1,6 @@
 import { render, screen, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { STORAGE_KEY } from "@/utils/loadState";
 import { ACTIONS } from "@/reducer/actions";
 import App from "./App";
 
@@ -29,8 +30,6 @@ vi.mock("@/reducer/gameReducer", () => ({
 
 import { gameReducer } from "@/reducer/gameReducer";
 
-const STORAGE_KEY = "memory-game-state";
-
 describe("App", () => {
   beforeEach(() => {
     sessionStorage.clear();
@@ -50,7 +49,20 @@ describe("App", () => {
   });
 
   it("renders GamePage when sessionStorage has a saved state past setup", () => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ status: "playing", flippedCardIds: [] }));
+    sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        status: "playing",
+        settings: { theme: "numbers", playerCount: 1, gridSize: 4 },
+        cards: [],
+        players: [],
+        flippedCardIds: [],
+        lastMatchedIds: [],
+        activePlayerIndex: 0,
+        moves: 0,
+        time: 0,
+      }),
+    );
     render(<App />);
     expect(screen.getByTestId("game-page")).toBeInTheDocument();
     expect(capturedState.status).toBe("playing");

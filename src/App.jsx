@@ -2,19 +2,9 @@ import { useReducer, useEffect } from "react";
 import { gameReducer } from "@/reducer/gameReducer";
 import { initialState } from "@/reducer/initialState";
 import { ACTIONS } from "@/reducer/actions";
+import { loadState, STORAGE_KEY } from "@/utils/loadState";
 import SetupPage from "@/pages/SetupPage";
 import GamePage from "@/pages/GamePage";
-
-const STORAGE_KEY = "memory-game-state";
-
-function loadState(initialArg) {
-  try {
-    const saved = sessionStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : initialArg;
-  } catch {
-    return initialArg;
-  }
-}
 
 function App() {
   const [state, dispatch] = useReducer(gameReducer, initialState, loadState);
