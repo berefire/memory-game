@@ -13,6 +13,7 @@ const Card = forwardRef(function Card(
   const readableValue = getReadableValue(card.value, theme);
 
   const handleClick = () => {
+    if (isRevealed) return;
     dispatch({ type: ACTIONS.FLIP_CARD, payload: { cardId: card.id } });
   };
 
