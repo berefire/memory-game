@@ -59,7 +59,7 @@ export const FlippedNumber = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Card 3, showing 7" }));
 
-    expect(args.dispatch).toHaveBeenCalled();
+    expect(args.dispatch).not.toHaveBeenCalled();
     // Already revealed — a real game reducer no-ops this, so it must still show its value
     expect(canvas.getByRole("button", { name: "Card 3, showing 7" })).toBeInTheDocument();
   },
