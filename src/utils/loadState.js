@@ -20,6 +20,14 @@ function isValidPlayer(player) {
   );
 }
 
+function hasValidCardIdReferences(data) {
+  const cardIds = new Set(data.cards.map((card) => card.id));
+  return (
+    data.flippedCardIds.every((id) => cardIds.has(id)) &&
+    data.lastMatchedIds.every((id) => cardIds.has(id))
+  );
+}
+
 export function isValidGameState(data) {
   return (
     data &&
@@ -36,7 +44,8 @@ export function isValidGameState(data) {
     data.players.length === data.settings.playerCount &&
     data.players.every(isValidPlayer) &&
     Array.isArray(data.flippedCardIds) &&
-    Array.isArray(data.lastMatchedIds)
+    Array.isArray(data.lastMatchedIds) &&
+    hasValidCardIdReferences(data)
   );
 }
 
