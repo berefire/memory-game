@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ACTIONS } from "@/reducer/actions";
 import GameMenu from "@/components/GameMenu/GameMenu";
 import Button from "@/components/Button/Button";
 
 function Header({ dispatch }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const headingRef = useRef(null);
+
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
 
   const handleRestart = () => {
     dispatch({ type: ACTIONS.RESTART });
@@ -16,15 +21,17 @@ function Header({ dispatch }) {
 
   return (
     <header className="flex items-center justify-between">
-      <h1 className="font-body text-2xl md:text-[2.5rem] leading-tight font-bold text-blue-950">memory</h1>
+      <h1
+        ref={headingRef}
+        tabIndex="-1"
+        className="font-body text-2xl md:text-[2.5rem] leading-tight font-bold text-blue-950"
+      >
+        memory
+      </h1>
 
       {/* Desktop: buttons always visible */}
       <div className="hidden gap-2 md:flex">
-        <Button
-          onClick={handleRestart}
-          size="medium"
-          className="px-7"
-        >
+        <Button onClick={handleRestart} size="medium" className="px-7">
           Restart
         </Button>
         <Button
@@ -39,20 +46,23 @@ function Header({ dispatch }) {
 
       {/* Mobile: single Menu button opens the modal */}
       <Button
-          onClick={() => setIsMenuOpen(true)}
-          size="small"
-          className="px-4.5 md:hidden"
-          aria-controls="game-menu"
-          aria-expanded={isMenuOpen}  
-          aria-haspopup="dialog"
-          aria-label="Open game menu"
-        >
+        onClick={() => setIsMenuOpen(true)}
+        size="small"
+        className="px-4.5 md:hidden"
+        aria-controls="game-menu"
+        aria-expanded={isMenuOpen}
+        aria-haspopup="dialog"
+        aria-label="Open game menu"
+      >
         Menu
       </Button>
 
-        <GameMenu id="game-menu" isOpen={isMenuOpen} dispatch={dispatch} onClose={() => setIsMenuOpen(false)} />
-   
-
+      <GameMenu
+        id="game-menu"
+        isOpen={isMenuOpen}
+        dispatch={dispatch}
+        onClose={() => setIsMenuOpen(false)}
+      />
     </header>
   );
 }
