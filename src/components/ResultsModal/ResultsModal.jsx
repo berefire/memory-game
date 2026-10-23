@@ -8,11 +8,18 @@ function ResultsModal({ isOpen, players, time, moves, dispatch }) {
   const previouslyFocusedRef = useRef(null);
 
   useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
     if (isOpen) {
-      previouslyFocusedRef.current = document.activeElement;
-      dialogRef.current?.showModal();
+      if (!dialog.open) {
+        previouslyFocusedRef.current = document.activeElement;
+        dialog.showModal();
+      }
     } else {
-      dialogRef.current?.close();
+      if (dialog.open) {
+        dialog.close();
+      }
       previouslyFocusedRef.current?.focus();
     }
   }, [isOpen]);
@@ -57,22 +64,35 @@ function ResultsModal({ isOpen, players, time, moves, dispatch }) {
       aria-labelledby="results-title"
     >
       <div className="flex flex-col gap-2 md:gap-4 text-center">
-        <h2 id="results-title" className="text-2xl md:text-5xl font-bold text-blue-950">
+        <h2
+          id="results-title"
+          className="text-2xl md:text-5xl font-bold text-blue-950"
+        >
           {title}
         </h2>
-        <p className="font-bold text-sm md:text-[1.125rem] text-blue-400">{subtitle}</p>
+        <p className="font-bold text-sm md:text-[1.125rem] text-blue-400">
+          {subtitle}
+        </p>
       </div>
 
       <div className="flex flex-col gap-2 md:gap-4">
         {isSolo ? (
           <>
             <div className="flex items-center justify-between rounded-[0.3125rem] bg-blue-100 px-4 py-2.75">
-              <span className="font-bold text-sm md:text-[1.125rem] text-blue-400">Time Elapsed</span>
-              <span className="font-bold text-xl md:text-[2rem] text-blue-800">{formatTime(time)}</span>
+              <span className="font-bold text-sm md:text-[1.125rem] text-blue-400">
+                Time Elapsed
+              </span>
+              <span className="font-bold text-xl md:text-[2rem] text-blue-800">
+                {formatTime(time)}
+              </span>
             </div>
             <div className="flex items-center justify-between rounded-lg bg-blue-100 px-4 py-2.75">
-              <span className="font-bold text-sm md:text-[1.125rem] text-blue-400">Moves Taken</span>
-              <span className="font-bold text-xl md:text-[2rem] text-blue-800">{moves} Moves</span>
+              <span className="font-bold text-sm md:text-[1.125rem] text-blue-400">
+                Moves Taken
+              </span>
+              <span className="font-bold text-xl md:text-[2rem] text-blue-800">
+                {moves} Moves
+              </span>
             </div>
           </>
         ) : (
@@ -85,11 +105,17 @@ function ResultsModal({ isOpen, players, time, moves, dispatch }) {
                   isWinner ? "bg-blue-800" : "bg-blue-100"
                 }`}
               >
-                <span className={`font-bold text-sm md:text-[1.125rem] ${isWinner ? "text-grey-50" : "text-blue-400"}`}>
+                <span
+                  className={`font-bold text-sm md:text-[1.125rem] ${isWinner ? "text-grey-50" : "text-blue-400"}`}
+                >
                   Player {player.id + 1}
                   {isWinner ? (isTie ? " (Tied!)" : " (Winner!)") : ""}
                 </span>
-                <span className={`font-bold text-xl md:text-[2rem] ${isWinner ? "text-grey-50" : "text-blue-800"}`}>{player.score} Pairs</span>
+                <span
+                  className={`font-bold text-xl md:text-[2rem] ${isWinner ? "text-grey-50" : "text-blue-800"}`}
+                >
+                  {player.score} Pairs
+                </span>
               </div>
             );
           })
@@ -100,7 +126,12 @@ function ResultsModal({ isOpen, players, time, moves, dispatch }) {
         <Button onClick={handleRestart} fullWidth size="medium">
           Restart
         </Button>
-        <Button onClick={handleSetupNewGame} variant="secondary" fullWidth size="medium">
+        <Button
+          onClick={handleSetupNewGame}
+          variant="secondary"
+          fullWidth
+          size="medium"
+        >
           Setup New Game
         </Button>
       </div>
