@@ -151,4 +151,33 @@ describe("loadState", () => {
     };
     expect(isValidGameState(good)).toBe(true);
   });
+
+  it("rejects a state with an unsupported status", () => {
+    const broken = { ...validState, status: "paused" };
+    expect(isValidGameState(broken)).toBe(false);
+  });
+
+  it("rejects a state with an unsupported theme", () => {
+    const broken = {
+      ...validState,
+      settings: { ...validState.settings, theme: "emoji" },
+    };
+    expect(isValidGameState(broken)).toBe(false);
+  });
+
+  it("rejects a state with an unsupported gridSize", () => {
+    const broken = {
+      ...validState,
+      settings: { ...validState.settings, gridSize: 8 },
+    };
+    expect(isValidGameState(broken)).toBe(false);
+  });
+
+  it("rejects a state with an unsupported playerCount", () => {
+    const broken = {
+      ...validState,
+      settings: { ...validState.settings, playerCount: 5 },
+    };
+    expect(isValidGameState(broken)).toBe(false);
+  });
 });
