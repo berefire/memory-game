@@ -5,12 +5,15 @@ import { formatTime } from "@/utils/formatTime";
 
 function ResultsModal({ isOpen, players, time, moves, dispatch }) {
   const dialogRef = useRef(null);
+  const previouslyFocusedRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
+      previouslyFocusedRef.current = document.activeElement;
       dialogRef.current?.showModal();
     } else {
       dialogRef.current?.close();
+      previouslyFocusedRef.current?.focus();
     }
   }, [isOpen]);
 
