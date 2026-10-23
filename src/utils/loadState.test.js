@@ -180,4 +180,31 @@ describe("loadState", () => {
     };
     expect(isValidGameState(broken)).toBe(false);
   });
+
+  it("rejects a numbers-theme state where a card value is a string", () => {
+  const brokenCards = [{ ...validCards[0], value: "1" }, ...validCards.slice(1)];
+  const broken = { ...validState, cards: brokenCards };
+  expect(isValidGameState(broken)).toBe(false);
+});
+
+it("rejects an icons-theme state where a card value is a number", () => {
+  const iconCards = validCards.map((card) => ({ ...card, value: "icon-feather" }));
+  iconCards[0] = { ...iconCards[0], value: 1 };
+  const broken = {
+    ...validState,
+    settings: { ...validState.settings, theme: "icons" },
+    cards: iconCards,
+  };
+  expect(isValidGameState(broken)).toBe(false);
+});
+
+it("accepts an icons-theme state where every card value is a string", () => {
+  const iconCards = validCards.map((card) => ({ ...card, value: `icon-${card.id}` }));
+  const good = {
+    ...validState,
+    settings: { ...validState.settings, theme: "icons" },
+    cards: iconCards,
+  };
+  expect(isValidGameState(good)).toBe(true);
+});
 });
