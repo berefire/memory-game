@@ -4,12 +4,15 @@ const VALID_THEMES = ["numbers", "icons"];
 const VALID_PLAYER_COUNTS = [1, 2, 3, 4];
 const VALID_GRID_SIZES = [4, 6];
 
-function isValidCard(card) {
+function isValidCard(card, theme) {
+  const isValidValueType =
+    theme === "icons" ? typeof card.value === "string" : typeof card.value === "number";
+
   return (
     card &&
     typeof card === "object" &&
     typeof card.id === "number" &&
-    (typeof card.value === "string" || typeof card.value === "number") &&
+    isValidValueType &&
     typeof card.isFlipped === "boolean" &&
     typeof card.isMatched === "boolean"
   );
@@ -32,6 +35,11 @@ function hasValidCardIdReferences(data) {
   );
 }
 
+function hasUniqueCardIds(cards) {
+  const ids = cards.map((card) => card.id);
+  return new Set(ids).size === ids.length;
+}
+
 export function isValidGameState(data) {
   return (
     data &&
@@ -43,13 +51,21 @@ export function isValidGameState(data) {
     VALID_PLAYER_COUNTS.includes(data.settings.playerCount) &&
     Array.isArray(data.cards) &&
     data.cards.length === data.settings.gridSize * data.settings.gridSize &&
-    data.cards.every(isValidCard) &&
+    data.cards.every((card) => isValidCard(card, data.settings.theme)) &&
+    hasUniqueCardIds(data.cards) &&
     Array.isArray(data.players) &&
     data.players.length === data.settings.playerCount &&
     data.players.every(isValidPlayer) &&
     Array.isArray(data.flippedCardIds) &&
     Array.isArray(data.lastMatchedIds) &&
-    hasValidCardIdReferences(data)
+    hasValidCardIdReferences(data) &&
+    Number.isInteger(data.activePlayerIndex) &&
+    data.activePlayerIndex >= 0 &&
+    data.activePlayerIndex < data.players.length &&
+    Number.isInteger(data.moves) &&
+    data.moves >= 0 &&
+    Number.isInteger(data.time) &&
+    data.time >= 0
   );
 }
 
