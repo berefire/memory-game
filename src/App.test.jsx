@@ -232,18 +232,42 @@ describe("App (integration, real pages)", () => {
     expect(cardButtons.length).toBeGreaterThan(0);
   });
 
+  it("starts a 6x6 game with the correct number of cards when 6x6 is selected", async () => {
+    const { default: App } = await import("./App");
+    render(<App />);
+
+    await userEvent.click(screen.getByRole("radio", { name: "6x6" }));
+    await userEvent.click(screen.getByRole("button", { name: /start game/i }));
+
+    const cardButtons = screen.getAllByRole("button", {
+      name: /^Card \d+, hidden$/,
+    });
+    expect(cardButtons).toHaveLength(36);
+  });
+
+  it("starts a game showing exactly 3 players when playerCount 3 is selected", async () => {
+    const { default: App } = await import("./App");
+    render(<App />);
+
+    await userEvent.click(screen.getByRole("radio", { name: "3" }));
+    await userEvent.click(screen.getByRole("button", { name: /start game/i }));
+
+    expect(screen.getByText("Player 1")).toBeInTheDocument();
+    expect(screen.getByText("Player 2")).toBeInTheDocument();
+    expect(screen.getByText("Player 3")).toBeInTheDocument();
+    expect(screen.queryByText("Player 4")).not.toBeInTheDocument();
+  });
+
   it("flips a real card when clicked during a real game", async () => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(validPlayingState));
     const { default: App } = await import("./App");
     render(<App />);
 
-    await userEvent.click(
-      screen.getByRole("button", { name: "Card 1, hidden" }),
-    );
+    const card = screen.getByRole("button", { name: "Card 1, hidden" });
+    await userEvent.click(card);
 
-    expect(
-      screen.queryByRole("button", { name: "Card 1, hidden" }),
-    ).not.toBeInTheDocument();
+    expect(card).toBeInTheDocument();
+    expect(card).not.toHaveAccessibleName("Card 1, hidden");
   });
 
   it("resets a flipped card back to hidden when Restart is clicked", async () => {
