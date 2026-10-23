@@ -4,12 +4,15 @@ import { useEffect, useRef } from "react";
 
 function GameMenu({ id, dispatch, onClose, isOpen }) {
   const dialogRef = useRef(null);
+  const previouslyFocusedRef = useRef(null);
 
-  useEffect(() => {
+ useEffect(() => {
     if (isOpen) {
+      previouslyFocusedRef.current = document.activeElement;
       dialogRef.current?.showModal();
     } else {
       dialogRef.current?.close();
+      previouslyFocusedRef.current?.focus();
     }
   }, [isOpen]);
 
