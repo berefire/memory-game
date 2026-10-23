@@ -8,7 +8,7 @@ function GameSetup({ dispatch }) {
     const [playerCount, setPlayerCount] = useState(1);
     const [gridSize, setGridSize] = useState(4);
     const headingRef = useRef(null);
-    
+
     useEffect(() => {
         headingRef.current?.focus();
     }, []);
@@ -23,7 +23,7 @@ function GameSetup({ dispatch }) {
 
     return (
         <main className="flex-1 flex flex-col gap-12 md:gap-20 justify-center items-center">
-        <h1 ref={headingRef} className="font-body text-center text-[2rem] md:text-[2.5rem] font-bold text-grey-50 leading-tight">
+        <h1 ref={headingRef} tabIndex="-1" className="font-body text-center text-[2rem] md:text-[2.5rem] font-bold text-grey-50 leading-tight">
           memory
         </h1>
             <h2 className="sr-only" id="setup-heading">Game Setup</h2>
