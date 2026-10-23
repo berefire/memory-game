@@ -1,4 +1,5 @@
 import { render, screen, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { STORAGE_KEY } from "@/utils/loadState";
 import { ACTIONS } from "@/reducer/actions";
@@ -103,7 +104,10 @@ describe("App (page rendering mocked)", () => {
     const { gameReducer } = await renderMockedApp();
 
     act(() => {
-      capturedDispatch({ type: "TEST_SET", payload: { flippedCardIds: [0, 1] } });
+      capturedDispatch({
+        type: "TEST_SET",
+        payload: { flippedCardIds: [0, 1] },
+      });
     });
     act(() => {
       vi.advanceTimersByTime(1000);
@@ -120,7 +124,10 @@ describe("App (page rendering mocked)", () => {
     const { gameReducer } = await renderMockedApp();
 
     act(() => {
-      capturedDispatch({ type: "TEST_SET", payload: { flippedCardIds: [0, 1] } });
+      capturedDispatch({
+        type: "TEST_SET",
+        payload: { flippedCardIds: [0, 1] },
+      });
     });
     act(() => {
       vi.advanceTimersByTime(500);
@@ -132,7 +139,9 @@ describe("App (page rendering mocked)", () => {
       vi.advanceTimersByTime(1000);
     });
 
-    const checkMatchCalls = gameReducer.mock.calls.filter(([, action]) => action.type === ACTIONS.CHECK_MATCH);
+    const checkMatchCalls = gameReducer.mock.calls.filter(
+      ([, action]) => action.type === ACTIONS.CHECK_MATCH,
+    );
     expect(checkMatchCalls).toHaveLength(0);
   });
 
@@ -147,7 +156,9 @@ describe("App (page rendering mocked)", () => {
       vi.advanceTimersByTime(3000);
     });
 
-    const tickCalls = gameReducer.mock.calls.filter(([, action]) => action.type === ACTIONS.TICK);
+    const tickCalls = gameReducer.mock.calls.filter(
+      ([, action]) => action.type === ACTIONS.TICK,
+    );
     expect(tickCalls).toHaveLength(3);
   });
 
@@ -168,7 +179,9 @@ describe("App (page rendering mocked)", () => {
       vi.advanceTimersByTime(3000);
     });
 
-    const tickCalls = gameReducer.mock.calls.filter(([, action]) => action.type === ACTIONS.TICK);
+    const tickCalls = gameReducer.mock.calls.filter(
+      ([, action]) => action.type === ACTIONS.TICK,
+    );
     expect(tickCalls).toHaveLength(2);
   });
 });
@@ -185,7 +198,9 @@ describe("App (integration, real pages)", () => {
     render(<App />);
 
     expect(screen.getByRole("heading", { name: "memory" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /start game/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /start game/i }),
+    ).toBeInTheDocument();
   });
 
   it("renders the real GamePage and GameBoard when a saved game is in progress", async () => {
@@ -196,7 +211,69 @@ describe("App (integration, real pages)", () => {
     render(<App />);
 
     expect(screen.getByRole("button", { name: "Restart" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Card 1, hidden" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Card 2, hidden" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Card 1, hidden" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Card 2, hidden" }),
+    ).toBeInTheDocument();
+  });
+
+  it("starts a real game when Start Game is submitted from the real SetupPage", async () => {
+    const { default: App } = await import("./App");
+    render(<App />);
+
+    await userEvent.click(screen.getByRole("button", { name: /start game/i }));
+
+    expect(screen.getByRole("button", { name: "Restart" })).toBeInTheDocument();
+    const cardButtons = screen.getAllByRole("button", {
+      name: /^Card \d+, hidden$/,
+    });
+    expect(cardButtons.length).toBeGreaterThan(0);
+  });
+
+  it("flips a real card when clicked during a real game", async () => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(validPlayingState));
+    const { default: App } = await import("./App");
+    render(<App />);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Card 1, hidden" }),
+    );
+
+    expect(
+      screen.queryByRole("button", { name: "Card 1, hidden" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("resets a flipped card back to hidden when Restart is clicked", async () => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(validPlayingState));
+    const { default: App } = await import("./App");
+    render(<App />);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Card 1, hidden" }),
+    );
+    expect(
+      screen.queryByRole("button", { name: "Card 1, hidden" }),
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Restart" }));
+
+    expect(
+      screen.getByRole("button", { name: "Card 1, hidden" }),
+    ).toBeInTheDocument();
+  });
+
+  it("returns to the real SetupPage when New Game is clicked", async () => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(validPlayingState));
+    const { default: App } = await import("./App");
+    render(<App />);
+
+    await userEvent.click(screen.getByRole("button", { name: "New Game" }));
+
+    expect(
+      screen.getByRole("button", { name: /start game/i }),
+    ).toBeInTheDocument();
   });
 });
