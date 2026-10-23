@@ -82,10 +82,13 @@ describe("gameReducer", () => {
           { id: 1, score: 0 },
         ],
         activePlayerIndex: 0,
+        moves: 0,
       };
       const next = gameReducer(state, { type: ACTIONS.CHECK_MATCH });
       expect(next.cards[0].isFlipped).toBe(false);
       expect(next.cards[1].isFlipped).toBe(false);
+      expect(next.flippedCardIds).toEqual([]);
+      expect(next.moves).toBe(1);
       expect(next.activePlayerIndex).toBe(1);
     });
 
