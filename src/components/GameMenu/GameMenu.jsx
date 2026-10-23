@@ -6,12 +6,19 @@ function GameMenu({ id, dispatch, onClose, isOpen }) {
   const dialogRef = useRef(null);
   const previouslyFocusedRef = useRef(null);
 
- useEffect(() => {
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
     if (isOpen) {
-      previouslyFocusedRef.current = document.activeElement;
-      dialogRef.current?.showModal();
+      if (!dialog.open) {
+        previouslyFocusedRef.current = document.activeElement;
+        dialog.showModal();
+      }
     } else {
-      dialogRef.current?.close();
+      if (dialog.open) {
+        dialog.close();
+      }
       previouslyFocusedRef.current?.focus();
     }
   }, [isOpen]);
