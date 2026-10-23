@@ -2,80 +2,93 @@ import { render, screen, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { STORAGE_KEY } from "@/utils/loadState";
 import { ACTIONS } from "@/reducer/actions";
-import App from "./App";
 
 let capturedDispatch;
 let capturedState;
 
-vi.mock("@/pages/SetupPage", () => ({
-  default: ({ dispatch }) => {
-    capturedDispatch = dispatch;
-    return <div data-testid="setup-page" />;
-  },
-}));
+const validPlayingState = {
+  status: "playing",
+  settings: { theme: "numbers", playerCount: 1, gridSize: 4 },
+  cards: Array.from({ length: 16 }, (_, i) => ({
+    id: i,
+    value: Math.floor(i / 2) + 1,
+    isFlipped: false,
+    isMatched: false,
+  })),
+  players: [{ id: 0, score: 0 }],
+  flippedCardIds: [],
+  lastMatchedIds: [],
+  activePlayerIndex: 0,
+  moves: 0,
+  time: 0,
+};
 
-vi.mock("@/pages/GamePage", () => ({
-  default: ({ state, dispatch }) => {
-    capturedDispatch = dispatch;
-    capturedState = state;
-    return <div data-testid="game-page" />;
-  },
-}));
+async function renderMockedApp() {
+  const { default: App } = await import("./App");
+  const { gameReducer } = await import("@/reducer/gameReducer");
+  render(<App />);
+  return { gameReducer };
+}
 
-vi.mock("@/reducer/gameReducer", () => ({
-  gameReducer: vi.fn((state, action) =>
-    action.type === "TEST_SET" ? { ...state, ...action.payload } : state
-  ),
-}));
+beforeEach(() => {
+  vi.resetModules();
+  sessionStorage.clear();
+  capturedDispatch = undefined;
+  capturedState = undefined;
+});
 
-import { gameReducer } from "@/reducer/gameReducer";
+afterEach(() => {
+  vi.useRealTimers();
+  vi.doUnmock("@/pages/SetupPage");
+  vi.doUnmock("@/pages/GamePage");
+  vi.doUnmock("@/reducer/gameReducer");
+});
 
-describe("App", () => {
+describe("App (page rendering mocked)", () => {
   beforeEach(() => {
-    sessionStorage.clear();
-    gameReducer.mockClear();
-    capturedDispatch = undefined;
-    capturedState = undefined;
+    vi.doMock("@/pages/SetupPage", () => ({
+      default: ({ dispatch }) => {
+        capturedDispatch = dispatch;
+        return <div data-testid="setup-page" />;
+      },
+    }));
+
+    vi.doMock("@/pages/GamePage", () => ({
+      default: ({ state, dispatch }) => {
+        capturedDispatch = dispatch;
+        capturedState = state;
+        return <div data-testid="game-page" />;
+      },
+    }));
+
+    vi.doMock("@/reducer/gameReducer", () => ({
+      gameReducer: vi.fn((state, action) =>
+        action.type === "TEST_SET" ? { ...state, ...action.payload } : state,
+      ),
+    }));
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("renders SetupPage when there is no saved state", () => {
-    render(<App />);
+  it("renders SetupPage when there is no saved state", async () => {
+    await renderMockedApp();
     expect(screen.getByTestId("setup-page")).toBeInTheDocument();
     expect(screen.queryByTestId("game-page")).not.toBeInTheDocument();
   });
 
-  it("renders GamePage when sessionStorage has a saved state past setup", () => {
-    sessionStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        status: "playing",
-        settings: { theme: "numbers", playerCount: 1, gridSize: 4 },
-        cards: [],
-        players: [],
-        flippedCardIds: [],
-        lastMatchedIds: [],
-        activePlayerIndex: 0,
-        moves: 0,
-        time: 0,
-      }),
-    );
-    render(<App />);
+  it("renders GamePage when sessionStorage has a saved state past setup", async () => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(validPlayingState));
+    await renderMockedApp();
     expect(screen.getByTestId("game-page")).toBeInTheDocument();
     expect(capturedState.status).toBe("playing");
   });
 
-  it("falls back to initial state when sessionStorage has invalid JSON", () => {
+  it("falls back to initial state when sessionStorage has invalid JSON", async () => {
     sessionStorage.setItem(STORAGE_KEY, "not valid json");
-    render(<App />);
+    await renderMockedApp();
     expect(screen.getByTestId("setup-page")).toBeInTheDocument();
   });
 
-  it("persists state to sessionStorage whenever it changes", () => {
-    render(<App />);
+  it("persists state to sessionStorage whenever it changes", async () => {
+    await renderMockedApp();
 
     act(() => {
       capturedDispatch({ type: "TEST_SET", payload: { status: "playing" } });
@@ -85,9 +98,9 @@ describe("App", () => {
     expect(saved.status).toBe("playing");
   });
 
-  it("dispatches CHECK_MATCH 1 second after two cards are flipped", () => {
+  it("dispatches CHECK_MATCH 1 second after two cards are flipped", async () => {
     vi.useFakeTimers();
-    render(<App />);
+    const { gameReducer } = await renderMockedApp();
 
     act(() => {
       capturedDispatch({ type: "TEST_SET", payload: { flippedCardIds: [0, 1] } });
@@ -98,13 +111,13 @@ describe("App", () => {
 
     expect(gameReducer).toHaveBeenCalledWith(
       expect.anything(),
-      expect.objectContaining({ type: ACTIONS.CHECK_MATCH })
+      expect.objectContaining({ type: ACTIONS.CHECK_MATCH }),
     );
   });
 
-  it("does not dispatch CHECK_MATCH if the flipped cards change before 1 second passes", () => {
+  it("does not dispatch CHECK_MATCH if the flipped cards change before 1 second passes", async () => {
     vi.useFakeTimers();
-    render(<App />);
+    const { gameReducer } = await renderMockedApp();
 
     act(() => {
       capturedDispatch({ type: "TEST_SET", payload: { flippedCardIds: [0, 1] } });
@@ -123,9 +136,9 @@ describe("App", () => {
     expect(checkMatchCalls).toHaveLength(0);
   });
 
-  it("ticks every second while status is playing", () => {
+  it("ticks every second while status is playing", async () => {
     vi.useFakeTimers();
-    render(<App />);
+    const { gameReducer } = await renderMockedApp();
 
     act(() => {
       capturedDispatch({ type: "TEST_SET", payload: { status: "playing" } });
@@ -138,9 +151,9 @@ describe("App", () => {
     expect(tickCalls).toHaveLength(3);
   });
 
-  it("stops ticking once status leaves playing", () => {
+  it("stops ticking once status leaves playing", async () => {
     vi.useFakeTimers();
-    render(<App />);
+    const { gameReducer } = await renderMockedApp();
 
     act(() => {
       capturedDispatch({ type: "TEST_SET", payload: { status: "playing" } });
@@ -157,5 +170,33 @@ describe("App", () => {
 
     const tickCalls = gameReducer.mock.calls.filter(([, action]) => action.type === ACTIONS.TICK);
     expect(tickCalls).toHaveLength(2);
+  });
+});
+
+describe("App (integration, real pages)", () => {
+  beforeEach(() => {
+    vi.doUnmock("@/pages/SetupPage");
+    vi.doUnmock("@/pages/GamePage");
+    vi.doUnmock("@/reducer/gameReducer");
+  });
+
+  it("renders the real SetupPage and GameSetup when there is no saved game", async () => {
+    const { default: App } = await import("./App");
+    render(<App />);
+
+    expect(screen.getByRole("heading", { name: "memory" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /start game/i })).toBeInTheDocument();
+  });
+
+  it("renders the real GamePage and GameBoard when a saved game is in progress", async () => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(validPlayingState));
+
+    vi.useFakeTimers();
+    const { default: App } = await import("./App");
+    render(<App />);
+
+    expect(screen.getByRole("button", { name: "Restart" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Card 1, hidden" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Card 2, hidden" })).toBeInTheDocument();
   });
 });
