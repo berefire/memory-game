@@ -62,8 +62,11 @@ describe("gameReducer", () => {
       };
       const next = gameReducer(state, { type: ACTIONS.CHECK_MATCH });
       expect(next.cards[0].isMatched).toBe(true);
+      expect(next.cards[1].isMatched).toBe(true);
+      expect(next.flippedCardIds).toEqual([]);
       expect(next.players[0].score).toBe(1);
       expect(next.moves).toBe(1);
+      expect(next.status).toBe("gameOver");
     });
 
     it("flips both back down and advances to the next player on a mismatch", () => {
