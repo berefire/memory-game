@@ -43,7 +43,10 @@ describe("isValidGameState", () => {
   });
 
   it("rejects a state where settings.gridSize is the wrong type", () => {
-    const broken = { ...validState, settings: { ...validState.settings, gridSize: "4" } };
+    const broken = {
+      ...validState,
+      settings: { ...validState.settings, gridSize: "4" },
+    };
     expect(isValidGameState(broken)).toBe(false);
   });
 
@@ -64,7 +67,10 @@ describe("isValidGameState", () => {
   });
 
   it("rejects a state where a card is missing isFlipped, keeping the length correct", () => {
-    const brokenCards = [{ id: 0, value: 1, isMatched: false }, ...validCards.slice(1)];
+    const brokenCards = [
+      { id: 0, value: 1, isMatched: false },
+      ...validCards.slice(1),
+    ];
     const broken = { ...validState, cards: brokenCards };
     expect(isValidGameState(broken)).toBe(false);
   });
@@ -120,7 +126,29 @@ describe("loadState", () => {
   });
 
   it("returns initialArg when players.length doesn't match playerCount", () => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ ...validState, players: [] }));
+    sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ ...validState, players: [] }),
+    );
     expect(loadState(initialArg)).toBe(initialArg);
+  });
+
+  it("rejects a state where flippedCardIds references a nonexistent card id", () => {
+    const broken = { ...validState, flippedCardIds: [999] };
+    expect(isValidGameState(broken)).toBe(false);
+  });
+
+  it("rejects a state where lastMatchedIds references a nonexistent card id", () => {
+    const broken = { ...validState, lastMatchedIds: [999] };
+    expect(isValidGameState(broken)).toBe(false);
+  });
+
+  it("accepts a state where flippedCardIds and lastMatchedIds reference real card ids", () => {
+    const good = {
+      ...validState,
+      flippedCardIds: [0, 1],
+      lastMatchedIds: [2, 3],
+    };
+    expect(isValidGameState(good)).toBe(true);
   });
 });
