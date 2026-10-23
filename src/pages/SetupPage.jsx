@@ -5,7 +5,7 @@ function SetupPage({ dispatch }) {
   return (
     <div className="min-h-dvh flex flex-col bg-blue-800">
         <GameSetup dispatch={dispatch} />
-        <Attribution />
+        <Attribution colorLink="text-blue-100" />
     </div>
   );
 }
