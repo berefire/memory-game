@@ -5,12 +5,12 @@ const VALID_PLAYER_COUNTS = [1, 2, 3, 4];
 const VALID_GRID_SIZES = [4, 6];
 
 function isValidCard(card, theme) {
+  if (!card || typeof card !== "object") return false;
+
   const isValidValueType =
     theme === "icons" ? typeof card.value === "string" : typeof card.value === "number";
 
   return (
-    card &&
-    typeof card === "object" &&
     typeof card.id === "number" &&
     isValidValueType &&
     typeof card.isFlipped === "boolean" &&
