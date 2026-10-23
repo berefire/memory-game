@@ -1,4 +1,8 @@
 export const STORAGE_KEY = "memory-game-state";
+const VALID_STATUSES = ["setup", "playing", "gameOver"];
+const VALID_THEMES = ["numbers", "icons"];
+const VALID_PLAYER_COUNTS = [1, 2, 3, 4];
+const VALID_GRID_SIZES = [4, 6];
 
 function isValidCard(card) {
   return (
@@ -32,11 +36,11 @@ export function isValidGameState(data) {
   return (
     data &&
     typeof data === "object" &&
-    typeof data.status === "string" &&
+    VALID_STATUSES.includes(data.status) &&
     data.settings &&
-    typeof data.settings.theme === "string" &&
-    typeof data.settings.gridSize === "number" &&
-    typeof data.settings.playerCount === "number" &&
+    VALID_THEMES.includes(data.settings.theme) &&
+    VALID_GRID_SIZES.includes(data.settings.gridSize) &&
+    VALID_PLAYER_COUNTS.includes(data.settings.playerCount) &&
     Array.isArray(data.cards) &&
     data.cards.length === data.settings.gridSize * data.settings.gridSize &&
     data.cards.every(isValidCard) &&
