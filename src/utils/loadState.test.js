@@ -1,11 +1,23 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { loadState, isValidGameState, STORAGE_KEY } from "./loadState";
 
+const validCards = Array.from({ length: 16 }, (_, i) => ({
+  id: i,
+  value: Math.floor(i / 2) + 1,
+  isFlipped: false,
+  isMatched: false,
+}));
+
+const validPlayers = [
+  { id: 0, score: 0 },
+  { id: 1, score: 0 },
+];
+
 const validState = {
   status: "playing",
   settings: { theme: "numbers", playerCount: 2, gridSize: 4 },
-  cards: [],
-  players: [],
+  cards: validCards,
+  players: validPlayers,
   flippedCardIds: [],
   lastMatchedIds: [],
   activePlayerIndex: 0,
@@ -45,6 +57,32 @@ describe("isValidGameState", () => {
     const { status, ...rest } = validState;
     expect(isValidGameState(rest)).toBe(false);
   });
+
+  it("rejects a state where a card is null, keeping the length correct", () => {
+    const broken = { ...validState, cards: [null, ...validCards.slice(1)] };
+    expect(isValidGameState(broken)).toBe(false);
+  });
+
+  it("rejects a state where a card is missing isFlipped, keeping the length correct", () => {
+    const brokenCards = [{ id: 0, value: 1, isMatched: false }, ...validCards.slice(1)];
+    const broken = { ...validState, cards: brokenCards };
+    expect(isValidGameState(broken)).toBe(false);
+  });
+
+  it("rejects a state where a player is missing score, keeping the length correct", () => {
+    const broken = { ...validState, players: [{ id: 0 }, { id: 1, score: 0 }] };
+    expect(isValidGameState(broken)).toBe(false);
+  });
+
+  it("rejects a state where cards.length doesn't match gridSize squared", () => {
+    const broken = { ...validState, cards: [] };
+    expect(isValidGameState(broken)).toBe(false);
+  });
+
+  it("rejects a state where players.length doesn't match playerCount", () => {
+    const broken = { ...validState, players: [] };
+    expect(isValidGameState(broken)).toBe(false);
+  });
 });
 
 describe("loadState", () => {
@@ -70,6 +108,19 @@ describe("loadState", () => {
 
   it("returns initialArg when the saved JSON is missing required fields", () => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ status: "playing" }));
+    expect(loadState(initialArg)).toBe(initialArg);
+  });
+
+  it("returns initialArg when a saved card is malformed", () => {
+    sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ ...validState, cards: [null, ...validCards.slice(1)] }),
+    );
+    expect(loadState(initialArg)).toBe(initialArg);
+  });
+
+  it("returns initialArg when players.length doesn't match playerCount", () => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ ...validState, players: [] }));
     expect(loadState(initialArg)).toBe(initialArg);
   });
 });
