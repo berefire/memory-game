@@ -62,6 +62,7 @@ function GameBoard({ cards, gridSize, theme, dispatch, lastMatchedIds = [] }) {
             card={card}
             dispatch={dispatch}
             theme={theme}
+            gridSize={gridSize}
             lastMatchedIds={lastMatchedIds}
             tabIndex={card.id === focusedId ? 0 : -1}
             onKeyDown={handleKeyDown(card.id)}
