@@ -4,7 +4,16 @@ import { ICON_MAP } from "@/data/cardData";
 import { getReadableValue } from "@/utils/getReadableValue";
 
 const Card = forwardRef(function Card(
-  { card, dispatch, theme, lastMatchedIds = [], tabIndex = -1, onKeyDown, onFocus },
+  {
+    card,
+    dispatch,
+    theme,
+    gridSize,
+    lastMatchedIds = [],
+    tabIndex = -1,
+    onKeyDown,
+    onFocus,
+  },
   ref,
 ) {
   const isRevealed = card.isFlipped || card.isMatched;
@@ -18,6 +27,11 @@ const Card = forwardRef(function Card(
   };
 
   const IconComponent = theme === "icons" ? ICON_MAP[card.value] : null;
+
+  const valueTextSizeClass =
+    gridSize === 6
+      ? "text-[1.5rem] md:text-[2rem]"
+      : "text-[2.5rem] md:text-[3.5rem]";
 
   return (
     <li className="list-none grid place-items-center">
@@ -34,7 +48,7 @@ const Card = forwardRef(function Card(
             ? `Card ${position}, showing ${readableValue}`
             : `Card ${position}, hidden`
         }
-        className="aspect-square w-full rounded-full perspective-[62.5rem] font-body text-[2.5rem] md:text-[3.5rem] focus-visible:focus-ring focus-visible:focus-ring-blue-800"
+        className={`aspect-square w-full rounded-full perspective-[62.5rem] font-body ${valueTextSizeClass} focus-visible:focus-ring focus-visible:focus-ring-blue-800`}
       >
         <div
           className={`relative h-full w-full transition-transform duration-300 transform-3d ${
